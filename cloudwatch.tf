@@ -4,9 +4,11 @@ resource "aws_cloudwatch_event_rule" "start_instance_event_rule" {
   name        = "start-instance-event-rule"
   description = "Starts Stopped EC2 Instance"
   #schedule_expression = "cron(0 8 ? * MON-FRI *)"
-  /* schedule_expression = "cron(0/10 * ? * MON-FRI *)" */
-  schedule_expression = "rate(5 minutes)"
-  depends_on = [ aws_lambda_function.ec2_start_schedular_lambda ] #Mention here start lambda function
+  schedule_expression = "cron(0/5 * ? * MON-SUN *)"
+  /* schedule_expression = "rate(5 minutes)" */
+  depends_on = [
+    aws_lambda_function.ec2_start_schedular_lambda
+  ] #Mention here start lambda function
 
 }
 
@@ -15,8 +17,8 @@ resource "aws_cloudwatch_event_rule" "stop_instance_event_rule" {
   name        = "stop-instance-event-rule"
   description = "Stop Running EC2 Instances"
   /* schedule_expression = "cron(0 20 ? * MON-FRI *)" */
-  /* schedule_expression = "cron(0/5 * ? * MON-FRI *)" */
-  schedule_expression = "rate(2 minutes)"
+  schedule_expression = "cron(0/2 * ? * MON-SUN *)"
+  /* schedule_expression = "rate(2 minutes)" */
   depends_on = [
     aws_lambda_function.ec2_stop_schedular_lambda
   ] # Mention here stop lambda function

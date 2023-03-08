@@ -9,13 +9,17 @@ def lambda_handler(event, context):
         {
         # 'Name': 'instance-type',
         # 'Values': ['t2.micro']
-          'Name': 'tag:env',
-          'Values': ['test']
+          # 'Name': 'tag:env',
+          # 'Values': ['test']
         },
         {
         'Name': 'instance-state-name',
         'Values': ['running']
-        }
+        },
+        {
+        'Name': 'tag:stop-in',
+        'Values': ['stopped']
+        },
     ]
 
     #Filter running instances that should stop

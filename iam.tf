@@ -10,16 +10,18 @@ resource "aws_iam_role" "ec2_iam_role" {
             {
             "Action": "sts:AssumeRole",
             "Principal": {
-                "Service": "lambda.amazonaws.com"
+                "Service": "lambda.amazonaws.com",
+                "Service": "kms.amazonaws.com"
+
             },
             "Effect": "Allow",
             "Sid": ""
             }
-            
-        ]
+          ]
     }
 EOF  
 }
+
 
 data "aws_iam_policy_document" "ec2_start_stop_schedular" {
   statement {
@@ -42,6 +44,32 @@ data "aws_iam_policy_document" "ec2_start_stop_schedular" {
       "ec2:Start*"
     ]
     resources = ["*", ]
+  }
+
+  statement {
+
+       actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey",
+    ]
+    resources = ["arn:aws:kms:*:*:*", ]
+  }
+
+  statement {
+    actions = [
+        "kms:RevokeGrant",
+        "kms:CreateGrant",
+        "kms:ListGrants"
+    ]
+    resources = ["*",]
+    condition {
+        test     = "Bool"
+        variable = "kms:GrantIsForAWSResource"
+        values   = [true]
+    }
   }
 
 }
